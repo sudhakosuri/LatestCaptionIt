@@ -9,7 +9,7 @@ export default class Result extends Component {
                 <div className="row">
                     <div className="col-md-3"></div>
                     <div className="col-md-6">
-                        Hello Results
+                        Hello Results Change
                     </div>
                     <div className="col-md-3"></div>
                 </div>

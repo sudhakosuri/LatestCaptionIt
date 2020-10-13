@@ -6,18 +6,30 @@ export default class Upload extends Component {
 
     constructor(props) {
         super(props);
-        this.fileChangedHandler = this.fileChangedHandler.bind(this);
-        this.uploadHandler = this.uploadHandler.bind(this);
-        this.state = {file:null};
+        this.state = {file: null, url: null, error:false};
       }
 
-    fileChangedHandler = (event) => {
-        const img = event.target.files[0]
-        this.setState({file: img})
-      }
+    urlChanged(event){
+
+        this.setState({file: this.state.file, url:event.target.value, error:this.state.error})
+        
+    }
+
+    fileChangedHandler(event){
+
+        this.setState({file: event.target.files[0], url:this.state.url, error:this.state.error})
       
-    uploadHandler = () => {
-        console.log(this.state.file)
+    }
+      
+    uploadHandler(){
+
+        if ((this.state.url == null || this.state.url == '') && (this.state.file == null || this.state.file == '')) {
+            this.setState({file: this.state.file, url:this.state.url, error:true})
+        }
+        else {
+            this.setState({file: this.state.file, url:this.state.url, error:false})
+            
+        }
     }
 
     render(){
@@ -29,7 +41,7 @@ export default class Upload extends Component {
                     <form>
                         <br/>
                         <div class="form-group">
-                            <input type="url" class="form-control"  placeholder="Enter URL"/>
+                            <input type="url" class="form-control"  placeholder="Enter URL" onChange={this.urlChanged.bind(this)}/>
                             
                             
                         </div>
@@ -38,18 +50,19 @@ export default class Upload extends Component {
                         <br/>
                         <div class="form-group">
                             
-                            <input type="file" onChange={this.fileChangedHandler} class="form-control"  placeholder="Image"/>
+                            <input type="file" onChange={this.fileChangedHandler.bind(this)} class="form-control"  placeholder="Image"/>
+                            {this.state.error && <div  style={{float:'left'}}><p style={{color: 'red'}}>Should provide URL or upload an image</p></div>}
                         </div>
                         <br/>
                         <br/>
                         
-                        <button type="submit" class="btn btn-primary" onClick={this.uploadHandler}>Get caption</button>
+                        <button type="button" class="btn btn-primary" onClick={this.uploadHandler.bind(this)}>Get caption</button>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         <button type="submit" class="btn btn-primary">Reset</button>
                     </form>
                         
                     </div>
-                    <div className="col-md-2"><Result data = {this.state.file}/></div>
+                    
                 </div>
             </div>
         )  
