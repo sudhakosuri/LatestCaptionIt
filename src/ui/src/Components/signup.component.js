@@ -11,11 +11,38 @@ export default class SignUp extends Component {
     onSubmit(e) {
         e.preventDefault();
         console.log(e)
-        if(this.state.errorEmail!='' && this.state.errorfirstName!='' && this.state.errorlastName!='' && this.state.errorPassword!='') {
+        if(this.state.errorEmail=='' && this.state.errorfirstName=='' && this.state.errorlastName=='' && this.state.errorPassword=='') {
             alert("All good")
+
+            
+            const requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    'firstname': this.state.firstName,
+                    'lastname': this.state.lastName,
+                    'email': this.state.email,
+                    'password': this.state.password,
+                    'plan': 'basic',
+                    'subscribedon': new Date()
+                  })
+            };
+            try {
+            fetch('https://d42pe9z166.execute-api.us-east-1.amazonaws.com/stage1/api/v1/users', requestOptions)
+                .then(response => response.json())
+                .then(data => alert("Successfully registered !!"));
+            }
+            catch (error) {
+                console.error(error);
+            }
         }
-        else
+        
+        else {
+            console.log(this.state)
+
             alert("Please enter valid fields before submitting")
+        }
+        
      }
 
     handleEmailChange(e) {

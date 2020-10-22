@@ -1,6 +1,8 @@
 import React, { Component } from "react";
+import { Redirect } from 'react-router-dom'
 
-import Main from './main.component';
+
+
 
 
 
@@ -10,8 +12,11 @@ import Main from './main.component';
 
 export default class Login extends Component {
 
+    
+
     constructor(props) {
         super(props);
+        
         this.state = {isLoggedIn: false, userName: '', password: '', erroruserName: '', errorPassword: ''};
       }
 
@@ -21,7 +26,7 @@ export default class Login extends Component {
         var uname = this.state.userName
         var pwd = this.state.password
         
-        if (uname != 'test' && pwd != 'test'){
+        if (uname != 'test' || pwd != 'test'){
             alert("Invalid credentials ! Please try again")    
         }
         else {
@@ -52,13 +57,20 @@ export default class Login extends Component {
        
 
     }
+
+   
     
 
     render() {
         if (this.state.isLoggedIn === true) {
-            return(
-                    <Main></Main>
+            
+                return (
+
+                    <Redirect to={{pathname: "/home", state: { uname: this.state.userName, pwd: this.state.password} }} />
+                    
+
                 )
+
                
           }
 
@@ -78,7 +90,7 @@ export default class Login extends Component {
                 </div>
 
                 <div className="form-group">
-                    <input type="text" className="form-control" placeholder="Enter password*" onChange={this.handlePasswordChange.bind(this)}/>
+                    <input type="password" className="form-control" placeholder="Enter password*" onChange={this.handlePasswordChange.bind(this)}/>
                     {(this.state.errorPassword!='') && <div  style={{float:'left'}}><p style={{color: 'red'}}>{this.state.errorPassword}</p></div>}
                 </div>
 

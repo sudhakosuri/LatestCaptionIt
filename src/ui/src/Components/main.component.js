@@ -7,6 +7,8 @@ import Child from "./child.component";
 
 export default class Main extends Component {
 
+   
+
     constructor(props) {
         super(props);
         this.handleUpload = this.handleUpload.bind(this);
@@ -25,8 +27,13 @@ export default class Main extends Component {
       }
 
     render(){
-    
+
+        console.log(this.props)
+        console.log(this.state)
+
         return(
+
+            
 
             <div>
                 <div className="row">
@@ -48,8 +55,9 @@ export default class Main extends Component {
                             </Navbar>
                         
                     </div>
-                </div>
+                    </div>
                 <Child data = {this.state.isUpload}></Child>
+                
             </div>
         )  
     }

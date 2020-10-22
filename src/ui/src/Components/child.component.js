@@ -13,9 +13,12 @@ export default class Child extends Component {
             return(
                 <div>
                     <div className="row">
-                        <div className="col-md-12"></div>
+                        <div className="col-md-4">
                         <p style={{alignment: "center"}}>{this.props.datafromParent}</p>
                             <Upload/>
+                        </div>
+                        <div className="col-md-8">
+                        </div>
                     </div>
                 </div>
             )  
@@ -23,9 +26,12 @@ export default class Child extends Component {
         return(
             <div>
                 <div className="row">
-                    <div className="col-md-12"></div>
+                    <div className="row"></div>
+                    <div className="col-md-1"></div>
+                    <div className="col-md-10">
                     <p>{this.props.datafromParent}</p>
                         <Usage/>
+                    </div>
                 </div>
             </div>
         )  

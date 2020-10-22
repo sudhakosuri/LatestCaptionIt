@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Switch, Route} from "react-router-dom";
 
 import Login from "./Components/login.component";
 import SignUp from "./Components/signup.component";
+import Main from "./Components/main.component";
 
 
 function App() {
@@ -18,9 +19,9 @@ function App() {
           
           <Switch>
             <Route exact path='/' component={Login} />
-            <Route path="/sign-in" component={Login} />
-            <Route path="/sign-up" component={SignUp} />
             <Route path="/logout" component={Login} />
+            <Route path="/sign-up" component={SignUp} />
+            <Route path="/home" component={Main} />
           </Switch>
           
         </div>
