@@ -17,7 +17,8 @@ export default class SignUp extends Component {
             
             const requestOptions = {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Access-Control-Request-Method': 'POST'
+                , 'Access-Control-Request-Headers': '*'},
                 body: JSON.stringify({ 
                     'firstname': this.state.firstName,
                     'lastname': this.state.lastName,
@@ -34,6 +35,7 @@ export default class SignUp extends Component {
             }
             catch (error) {
                 console.error(error);
+                alert("Something went wrong! Please try again")
             }
         }
         

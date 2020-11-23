@@ -20,18 +20,44 @@ export default class Login extends Component {
         this.state = {isLoggedIn: false, userName: '', password: '', erroruserName: '', errorPassword: ''};
       }
 
-    handleLogin() {
+      onSubmit(e) {
 
-        
+        e.preventDefault();
+        console.log(e)
         var uname = this.state.userName
         var pwd = this.state.password
+
+        console.log(uname)
+        console.log(pwd)
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Access-Control-Request-Method': 'POST'
+            , 'Access-Control-Request-Headers': '*'},
+            body: JSON.stringify({ 
+                'email': uname,
+                'password': pwd
+              })
+        };
+
+        fetch('https://d42pe9z166.execute-api.us-east-1.amazonaws.com/stage1/api/v1/authenticate', requestOptions)
+        .then(response => {
+            const data = response.json();
+
+            // check for error response
+            if (!response.ok) {
+                // get error message from body or default to response statusText
+                const error = response.statusText
+                return Promise.reject(error);
+            }
+
+            this.setState({isLoggedIn: true, userName: this.state.userName, password: this.state.password, erroruserName: this.state.erroruserName, errorPassword: this.state.errorPassword})
+        })
+        .catch(error => {
+            console.error('There was an error!', error);
+            alert('Invalid credentials ! Please try again.')
+        });
         
-        if (uname != 'test' || pwd != 'test'){
-            alert("Invalid credentials ! Please try again")    
-        }
-        else {
-            this.setState({isLoggedIn: true, userName: this.state.userName, password: this.state.password, erroruserName: this.state.erroruserName, errorPassword: this.state.errorPassword})   
-        }
+        
     }
 
     handleuserNameChange(e) {
@@ -98,7 +124,7 @@ export default class Login extends Component {
                     
                 </div>
 
-                <button type="submit" className="btn btn-primary btn-block" onClick = {this.handleLogin.bind(this)}>Submit</button>
+                <button type="button" className="btn btn-primary btn-block" onClick={this.onSubmit.bind(this)}>Login</button>
                 <p className="forgot-password text-right">
                     New user ? <a href="/sign-up">Register here</a>
                 </p>
