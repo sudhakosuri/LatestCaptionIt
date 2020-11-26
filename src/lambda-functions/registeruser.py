@@ -4,6 +4,7 @@ import logging
 from random import choice
 from string import ascii_lowercase
 
+
 logger = logging.getLogger()
 #logger.setLevel(logging.INFO)
 logger.setLevel(logging.INFO)
@@ -50,7 +51,8 @@ def lambda_handler(event, context):
         plan_id_query = f"select id from plans where name='{plan}'"
         logger.info(plan_id_query)
         
-        plan_id = cursr.execute(plan_id_query)
+        cursr.execute(plan_id_query)
+        plan_id = cursr.fetchone()[0]
         logger.info("planid " + str(plan_id))
         if not plan_id:
             logger.warning(f"Error retrieving plan id for plan {plan}. Using basic")
@@ -59,8 +61,8 @@ def lambda_handler(event, context):
 
         subscribedon = subscribedon.replace('/', '-')
         logger.info(subscribedon)
-        query = f'insert into users (id, firstName, lastName, email, password, planId, subscribedOn) ' + \
-        f'values ("{uid}", "{fname}", "{lname}", "{email}", "{password}", {plan_id}, STR_TO_DATE("{subscribedon}", "%m-%d-%y"))'
+        query = f'insert into users (id, firstName, lastName, email, password, planId, planusage, subscribedOn) ' + \
+        f'values ("{uid}", "{fname}", "{lname}", "{email}", "{password}", {plan_id}, 0, STR_TO_DATE("{subscribedon}", "%m-%d-%y"))'
         logger.info(query)
         cursr.execute(query)
         conn.commit()
