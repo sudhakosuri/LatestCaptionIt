@@ -37,6 +37,7 @@ def lambda_handler(event, context):
     userid = "ngsvuixa"
 
     with conn.cursor() as cursr:
+        # query = f'select planusage '
         query = f'update users set planusage=planusage+1 where id="{userid}"'
         logger.debug(query)
         try:
