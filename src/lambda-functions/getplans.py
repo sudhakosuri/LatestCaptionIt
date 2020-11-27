@@ -5,7 +5,7 @@ from random import choice
 from string import ascii_lowercase
 
 logger = logging.getLogger()
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.DEBUG)
 
 def lambda_handler(event, context):
 
@@ -32,31 +32,33 @@ def lambda_handler(event, context):
         # return value ? check http responses
         return
 
-    # if used with HTTP API, json data is encoded into event["body"]
-    # if used with REST API, json data is event
-    try:
-        data = json.loads(event["body"])
-    except KeyError:
-        data = event
-
     with conn.cursor() as cursr:
-        userid = data["id"]
-        image = data["image"]
-        logger.info(data)
-        # query = f'select planusage '
-        query = f'update users set planusage=planusage+1 where id="{userid}"'
+        query = f'select * from plans'
         logger.debug(query)
         try:
             cursr.execute(query)
-            logger.debug(query)
-            conn.commit()
-            status = 200
-            message = {'message': f'Caption generated successfully'}
+            records = cursr.fetchall()
+            logger.info(query)
+            if records:
+                message = []
+                for record in records:
+                    status = 200
+                    plan = {
+                        "id": str(record[0]),
+                        "name": str(record[1]),
+                        "price": str(record[2]),
+                        "duration": str(record[3]),
+                        "limit": str(record[4])
+                    }
+                    message.append(plan)
+            else:
+                status = 404
+                message = {'message': f'No plans found'}
         except Exception as ex:
             status = 404
-            error = f"Error fetching user record for user {userid}: {ex}"
+            error = f"Error fetching plans"
             logger.error(error)
-            message = {'message': error}
+            message = {"message": error}
     # TODO implement
     return {
         'statusCode': status,

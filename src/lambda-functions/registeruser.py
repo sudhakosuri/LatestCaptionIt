@@ -6,7 +6,7 @@ from string import ascii_lowercase
 
 
 logger = logging.getLogger()
-#logger.setLevel(logging.INFO)
+
 logger.setLevel(logging.INFO)
 
 def lambda_handler(event, context):
@@ -34,8 +34,13 @@ def lambda_handler(event, context):
         # return value ? check http responses
         return
 
-    data = json.loads(event["body"])
-    
+    logger.info(event)
+    logger.info(context)
+    try:
+        data = json.loads(event["body"])
+    except KeyError:
+        data = event
+
     with conn.cursor() as cursr:
         uid = ''.join(choice(ascii_lowercase) for i in range(8))
         fname = data["firstname"]

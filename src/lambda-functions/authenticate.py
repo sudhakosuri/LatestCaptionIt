@@ -32,29 +32,34 @@ def lambda_handler(event, context):
         # return value ? check http responses
         return
 
-    data = json.loads(event["body"])
+    # if used with HTTP API, json data is encoded into event["body"]
+    # if used with REST API, json data is event
+    try:
+        data = json.loads(event["body"])
+    except KeyError:
+        data = event
 
     with conn.cursor() as cursr:
         email = data["email"]
         password = data["password"]
         db_pass = None
-        query = f'select password from users where email="{email}" and password="{password}"'
+        query = f'select id from users where email="{email}" and password="{password}"'
         logger.debug(query)
         try:
             cursr.execute(query)
-            db_pass = cursr.fetchone()
-            if db_pass:
+            userid = cursr.fetchone()
+            if userid:
                 status = 200
-                message = "User authentication succesful"
+                message = {"id": userid[0]}
             else:
                 status = 404
-                message = "Incorrect username or password"
+                message = {"message": "Incorrect username or password"}
         except Exception as ex:
             logger.error(f"Error fetching user record for user {email}: {ex}")
     # TODO implement
     return {
         'statusCode': status,
-        'body': json.dumps({"message": message}),
+        'body': json.dumps(message),
         'headers': {
             'Access-Control-Allow-Headers': '*',
             'Access-Control-Allow-Origin': '*',

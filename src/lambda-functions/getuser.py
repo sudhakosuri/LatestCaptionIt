@@ -5,7 +5,7 @@ from random import choice
 from string import ascii_lowercase
 
 logger = logging.getLogger()
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.DEBUG)
 
 def lambda_handler(event, context):
 
@@ -32,9 +32,7 @@ def lambda_handler(event, context):
         # return value ? check http responses
         return
 
-    #data = json.loads(event["body"])
-    #userid = data["id"]
-    userid = "ngsvuixa"
+    userid = event["pathParameters"]["id"]
 
     with conn.cursor() as cursr:
         query = f'select * from users where id="{userid}"'
@@ -42,16 +40,18 @@ def lambda_handler(event, context):
         try:
             cursr.execute(query)
             record = cursr.fetchone()
+            logger.info(query)
             if record:
                 q = f'select name from plans where id={record[5]}'
                 logger.debug(q)
                 cursr.execute(q)
                 plan = cursr.fetchone()[0]
+                logger.info(plan)
                 date = str(record[7]).split('-')
                 subscribedon = date[1] + '/' + date[2] + '/' + date[0]
                 status = 200
                 message = {
-                    "uid": record[0],
+                    "id": record[0],
                     "firstname": record[1],
                     "lastname": record[2],
                     "email": record[3],
@@ -63,7 +63,10 @@ def lambda_handler(event, context):
                 status = 404
                 message = {'message': f'No user found with ID : "{userid}"'}
         except Exception as ex:
-            logger.error(f"Error fetching user record for user {userid}: {ex}")
+            status = 404
+            error = f"Error fetching user record for user {userid}: {ex}"
+            logger.error(error)
+            message = {"message": error}
     # TODO implement
     return {
         'statusCode': status,
@@ -74,6 +77,3 @@ def lambda_handler(event, context):
             'Access-Control-Allow-Methods': '*'
         },
     }
-
-a = json.dumps({"id": "abcd"})
-print(lambda_handler(json.dumps({"body": a}), None))
