@@ -8,11 +8,27 @@ export default class SignUp extends Component {
       }
 
 
+   
     onSubmit(e) {
         e.preventDefault();
         console.log(e)
         if(this.state.errorEmail=='' && this.state.errorfirstName=='' && this.state.errorlastName=='' && this.state.errorPassword=='') {
             alert("All good")
+            var today = new Date();
+            var dd = today.getDate();
+
+            var mm = today.getMonth()+1; 
+            var yyyy = today.getFullYear();
+            if(dd<10) 
+            {
+                dd='0'+dd;
+            } 
+
+            if(mm<10) 
+            {
+                mm='0'+mm;
+            } 
+            today = mm+'/'+dd+'/'+yyyy;
 
             
             const requestOptions = {
@@ -25,13 +41,16 @@ export default class SignUp extends Component {
                     'email': this.state.email,
                     'password': this.state.password,
                     'plan': 'basic',
-                    'subscribedon': new Date()
+                    'subscribedon': today
                   })
             };
             try {
-            fetch('https://d42pe9z166.execute-api.us-east-1.amazonaws.com/stage1/api/v1/users', requestOptions)
-                .then(response => response.json())
-                .then(data => alert("Successfully registered !!"));
+            fetch('https://86wu00bura.execute-api.us-east-1.amazonaws.com/v1/users', requestOptions)
+                .then(response => {response.json()
+                console.log(response)})
+                .then(data => {alert("Successfully registered !!") 
+                console.log("helo")
+            console.log(data)});
             }
             catch (error) {
                 console.error(error);

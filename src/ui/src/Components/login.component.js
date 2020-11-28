@@ -17,7 +17,7 @@ export default class Login extends Component {
     constructor(props) {
         super(props);
         
-        this.state = {isLoggedIn: false, userName: '', password: '', erroruserName: '', errorPassword: ''};
+        this.state = {isLoggedIn: false, userName: '', password: '', erroruserName: '', errorPassword: '', userid:''};
       }
 
       onSubmit(e) {
@@ -39,22 +39,34 @@ export default class Login extends Component {
               })
         };
 
-        fetch('https://d42pe9z166.execute-api.us-east-1.amazonaws.com/stage1/api/v1/authenticate', requestOptions)
+        fetch('https://86wu00bura.execute-api.us-east-1.amazonaws.com/v1/authenticate', requestOptions)
         .then(response => {
-            const data = response.json();
+            
 
             // check for error response
             if (!response.ok) {
                 // get error message from body or default to response statusText
-                const error = response.statusText
+                const error = "There was some problem in the request. Please try again."
                 return Promise.reject(error);
             }
+            return response.json()
+        })
+        .then(data => {
 
-            this.setState({isLoggedIn: true, userName: this.state.userName, password: this.state.password, erroruserName: this.state.erroruserName, errorPassword: this.state.errorPassword})
+            console.log(data)
+            if (data.statusCode != 200) {
+                // get error message from body or default to response statusText
+                const error = (JSON.parse(data.body)).message
+                return Promise.reject(error);
+            }
+            const uid = (JSON.parse(data.body)).id
+            this.setState({isLoggedIn: true, userName: this.state.userName, password: this.state.password, erroruserName: this.state.erroruserName, errorPassword: this.state.errorPassword, userid: uid})
+            
+
         })
         .catch(error => {
             console.error('There was an error!', error);
-            alert('Invalid credentials ! Please try again.')
+            alert(error)
         });
         
         
@@ -64,10 +76,10 @@ export default class Login extends Component {
 
 
             if(e.target.value == ''){
-            this.setState({isLoggedIn: this.state.isLoggedIn, userName: e.target.value, password: this.state.password, erroruserName: 'Required', errorPassword: this.state.errorPassword})
+            this.setState({isLoggedIn: this.state.isLoggedIn, userName: e.target.value, password: this.state.password, erroruserName: 'Required', errorPassword: this.state.errorPassword, userid:this.state.userid})
             }
             else {
-                this.setState({isLoggedIn: this.state.isLoggedIn, userName: e.target.value, password: this.state.password, erroruserName: '', errorPassword: this.state.errorPassword})
+                this.setState({isLoggedIn: this.state.isLoggedIn, userName: e.target.value, password: this.state.password, erroruserName: '', errorPassword: this.state.errorPassword, userid:this.state.userid})
             }
             
     }
@@ -75,10 +87,10 @@ export default class Login extends Component {
     handlePasswordChange(e) {
 
         if(e.target.value =='') {
-            this.setState({isLoggedIn: this.state.isLoggedIn, userName: this.state.userName, password: this.state.password, erroruserName: this.state.erroruserName, errorPassword: 'Required'})
+            this.setState({isLoggedIn: this.state.isLoggedIn, userName: this.state.userName, password: this.state.password, erroruserName: this.state.erroruserName, errorPassword: 'Required', userid:this.state.userid})
         }
         else {
-            this.setState({isLoggedIn: this.state.isLoggedIn, userName: this.state.userName, password: e.target.value, erroruserName: this.state.erroruserName, errorPassword: ''})
+            this.setState({isLoggedIn: this.state.isLoggedIn, userName: this.state.userName, password: e.target.value, erroruserName: this.state.erroruserName, errorPassword: '', userid:this.state.userid})
         }
        
 
@@ -89,10 +101,12 @@ export default class Login extends Component {
 
     render() {
         if (this.state.isLoggedIn === true) {
+
+
             
                 return (
 
-                    <Redirect to={{pathname: "/home", state: { uname: this.state.userName, pwd: this.state.password} }} />
+                    <Redirect to={{pathname: "/home", state: { uname: this.state.userName, pwd: this.state.password, userid:this.state.userid} }} />
                     
 
                 )

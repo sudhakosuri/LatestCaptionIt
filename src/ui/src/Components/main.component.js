@@ -28,9 +28,7 @@ export default class Main extends Component {
 
     render(){
 
-        console.log(this.props)
-        console.log(this.state)
-
+        
         return(
 
             
@@ -56,7 +54,7 @@ export default class Main extends Component {
                         
                     </div>
                     </div>
-                <Child data = {this.state.isUpload}></Child>
+                <Child data = {this.state.isUpload} userid= {this.props}></Child>
                 
             </div>
         )  

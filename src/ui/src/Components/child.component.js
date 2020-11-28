@@ -7,15 +7,20 @@ import Usage from "./usage.component";
 
 export default class Child extends Component {
 
+    constructor(props) {
+        super(props);
+      }
+
     
     render(){
+        
         if (this.props.data === 1) {
             return(
                 <div>
                     <div className="row">
                         <div className="col-md-4">
                         <p style={{alignment: "center"}}>{this.props.datafromParent}</p>
-                            <Upload/>
+                            <Upload userid = {this.props}/>
                         </div>
                         <div className="col-md-8">
                         </div>
@@ -30,7 +35,7 @@ export default class Child extends Component {
                     <div className="col-md-1"></div>
                     <div className="col-md-10">
                     <p>{this.props.datafromParent}</p>
-                        <Usage/>
+                        <Usage userid = {this.props}/>
                     </div>
                 </div>
             </div>
