@@ -17,7 +17,7 @@ export default class Usage extends Component {
         const requestOptions = {
             method: 'GET',
             headers: { 'Access-Control-Request-Method': 'GET'
-            , 'Access-Control-Request-Headers': '*'}
+            , 'Access-Control-Request-Headers': '*', 'x-auth-token': 'auth'}
         };
 
         const link_uri = 'https://86wu00bura.execute-api.us-east-1.amazonaws.com/v1/users/'+uid

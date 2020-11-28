@@ -20,9 +20,10 @@ export default class Upload extends Component {
         
     }
 
-    fileChangedHandler(picture){
+    fileChangedHandler(event){
 
-        this.setState({file: picture, url:this.state.url, error:this.state.error, showResults:this.state.showResults, data: this.state.data})
+        console.log(event.target.files)
+        this.setState({file: event.target.files[0], url:this.state.url, error:this.state.error, showResults:this.state.showResults, data: this.state.data})
       
     }
 
@@ -68,10 +69,10 @@ export default class Upload extends Component {
                     const requestOptions = {
                         method: 'POST',
                         headers: { 'Access-Control-Request-Method': 'POST'
-                        , 'Access-Control-Request-Headers': '*'},
+                        , 'Access-Control-Request-Headers': '*', 'x-auth-token': 'auth'},
                         body: JSON.stringify({ 
                             'id': uid,
-                            'image': dataURL.replace(/^data:image\/(png|jpg);base64,/, "")
+                            'image': dataURL.replace(/^data:image\/(png|jpg|jpeg);base64,/, "")
                           })
                     };
 
@@ -96,7 +97,7 @@ export default class Upload extends Component {
                             return Promise.reject(error);
                         }
 
-                        dt = dataURL.replace(/^data:image\/(png|jpg);base64,/, "")
+                        dt = dataURL.replace(/^data:image\/(png|jpg|jpeg);base64,/, "")
 
                         console.log(dt)
                         this_real.setState({file: this_real.state.file, url:this_real.state.url, error:false, showResults:true, data: (JSON.parse(data.body)).message})
@@ -115,15 +116,16 @@ export default class Upload extends Component {
                 
             }
             else {
-                this.getBase64(this.state.file[0], (result) => {
-        
+                this.getBase64(this.state.file, (result) => {
+
+                   
                     const requestOptions = {
                         method: 'POST',
                         headers: { 'Access-Control-Request-Method': 'POST'
-                        , 'Access-Control-Request-Headers': '*'},
+                        , 'Access-Control-Request-Headers': '*', 'x-auth-token': 'auth'},
                         body: JSON.stringify({ 
                             'id': uid,
-                            'image': result.replace(/^data:image\/(png|jpg);base64,/, "")
+                            'image': result.replace(/^data:image\/(png|jpg|jpeg);base64,/, "")
                           })
                     };
             
@@ -162,23 +164,17 @@ export default class Upload extends Component {
                 });
             }
 
-            
 
-            
-
-           
-        /**/
-
-            
                
         }
     }
 
-    reset() {
-        document.getElementById("imgfile");
-    }
+    
 
     render(){
+
+        
+
         return(
             <div>
                 <div className="row">
@@ -187,7 +183,7 @@ export default class Upload extends Component {
                     <form id="create-course-form">
                         <br/>
                         <div class="form-group">
-                            <input type="url" class="form-control"  placeholder="Enter URL" onChange={this.urlChanged.bind(this)}/>
+                            <input type="url" id="url_id" class="form-control"  placeholder="Enter URL" onChange={this.urlChanged.bind(this)}/>
                             
                             
                         </div>
@@ -196,14 +192,9 @@ export default class Upload extends Component {
                         <br/>
                         <div class="form-group">
                             
-                        <ImageUploader id="imgfile"
-                withIcon={true}
-                buttonText='Browse image'
-                onChange={this.fileChangedHandler.bind(this)}
-                imgExtension={['.jpg', '.gif', '.png', '.gif']}
-                maxFileSize={5242880}
-                class="form-control"  placeholder="Image"
-            />
+
+                       <input type="file" id="files" accept="image/*" class="form-control"  placeholder="Image" onChange={this.fileChangedHandler.bind(this)}/>
+                    
             {this.state.error && <div  style={{float:'left'}}><p style={{color: 'red'}}>Should provide URL or upload an image</p></div>}
                         </div>
                         <br/>
@@ -211,7 +202,7 @@ export default class Upload extends Component {
                         
                         <button type="button" class="btn btn-primary" onClick={this.uploadHandler.bind(this)}>Get caption</button>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <button type="submit" class="btn btn-primary" onClick={this.reset.bind(this)}>Reset</button>
+                        
                     </form>
                     </div>
                     {this.state.showResults && <div className="col-md-2"><Result file={this.state.file} data={this.state.data}></Result></div>}
