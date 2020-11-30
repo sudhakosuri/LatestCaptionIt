@@ -3,71 +3,82 @@ import pymysql
 import logging
 from random import choice
 from string import ascii_lowercase
+from connect_db import connect
 
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
 
 def lambda_handler(event, context):
 
-    def connect():
-        try:
-            #rds settings
-            rds_host  = "soc-db-instance.cqn1yr2onvp2.us-east-1.rds.amazonaws.com"
-            name = "admin"
-            password = "password1q"
-            db_name = "soc_database"
-
-            conn = None
-            conn = pymysql.connect(rds_host, user=name, passwd=password, db=db_name, connect_timeout=30)
-            logger.info("SUCCESS: Connection to RDS MySQL instance succeeded")
-            return conn
-        except pymysql.MySQLError as e:
-            logger.error("ERROR: Unexpected error: Could not connect to MySQL instance.")
-            logger.error(e)
-            return conn
-
     conn = connect()
     if not conn:
-        logger.error("Error connecting database")
-        # return value ? check http responses
-        return
+        logger.error("Connection to the database failed")
+        return {
+        'statusCode': 500,
+        'body': json.dumps({"message": "Connection to the database failed"}),
+        'headers': {
+            'Access-Control-Allow-Headers': '*',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': '*'
+            },
+        }
 
-    userid = event["pathParameters"]["id"]
+    try:
+        userid = event["pathParameters"]["id"]
+    except Exception as ex:
+        error = f'Error fetching userid from request: "{ex}"'
+        logger.error(error)
+        return {
+        'statusCode': 400,
+        'body': json.dumps({"message": "Error fetching userid from the request"}),
+        'headers': {
+            'Access-Control-Allow-Headers': '*',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': '*'
+            },
+        }
 
-    with conn.cursor() as cursr:
-        query = f'select * from users where id="{userid}"'
-        logger.debug(query)
-        try:
-            cursr.execute(query)
-            record = cursr.fetchone()
-            logger.info(query)
-            if record:
-                q = f'select name from plans where id={record[5]}'
-                logger.debug(q)
-                cursr.execute(q)
-                plan = cursr.fetchone()[0]
-                logger.info(plan)
-                date = str(record[7]).split('-')
-                subscribedon = date[1] + '/' + date[2] + '/' + date[0]
-                status = 200
-                message = {
-                    "id": record[0],
-                    "firstname": record[1],
-                    "lastname": record[2],
-                    "email": record[3],
-                    "plan": plan,
-                    "usage": record[6],
-                    "subscribedon": subscribedon
-                }
-            else:
+    try:
+        with conn.cursor() as cursr:
+            query = f'select * from users where id="{userid}"'
+            logger.debug(query)
+            try:
+                cursr.execute(query)
+                record = cursr.fetchone()
+                logger.debug(record)
+                if record:
+                    query = f'select name from plans where id={record[5]}'
+                    logger.debug(query)
+                    cursr.execute(query)
+                    plan = cursr.fetchone()[0]
+                    logger.debug(plan)
+                    date = str(record[7]).split('-')
+                    logger.debug(date)
+                    subscribedon = date[1] + '/' + date[2] + '/' + date[0]
+                    status = 200
+                    message = {
+                        "id": record[0],
+                        "firstname": record[1],
+                        "lastname": record[2],
+                        "email": record[3],
+                        "plan": plan,
+                        "usage": record[6],
+                        "subscribedon": subscribedon
+                    }
+                else:
+                    status = 404
+                    message = {'message': f'No user found with ID : "{userid}"'}
+            except Exception as ex:
                 status = 404
-                message = {'message': f'No user found with ID : "{userid}"'}
-        except Exception as ex:
-            status = 404
-            error = f"Error fetching user record for user {userid}: {ex}"
-            logger.error(error)
-            message = {"message": error}
-    # TODO implement
+                error = f"Error fetching user record for user {userid}: {ex}"
+                logger.error(error)
+                message = {"message": error}
+    except Exception as ex:
+        error = f'Error getting user details: {ex}'
+        logger.error(error)
+        status = 500
+        message = {"message": error}
+
     return {
         'statusCode': status,
         'body': json.dumps(message),
