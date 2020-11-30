@@ -16,6 +16,30 @@ def lambda_handler(event, context):
         data = json.loads(event["body"])
     except KeyError:
         data = event
+        
+    try:
+        firstname = data["firstname"]
+        lastname = data["lastname"]
+        email = data["email"]
+        plan = data["plan"]
+        password = data["password"]
+    except KeyError as ex:
+        error = f'Missing request data: "{ex}"'
+        logger.error(error)
+        return {
+            'statusCode': 400,
+            'body': json.dumps({"message": error}),
+            'headers': {
+                'Access-Control-Allow-Headers': '*',
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': '*'
+                },
+            }
+
+    try:
+        subscribedon = data["subscribedon"]
+    except:
+        subscribedon = str(datetime.today().strftime('%m/%d/%Y'))
 
     conn = connect()
     if not conn:
@@ -32,32 +56,7 @@ def lambda_handler(event, context):
 
     try:
         with conn.cursor() as cursr:
-            try:
-                firstname = data["firstname"]
-                lastname = data["lastname"]
-                email = data["email"]
-                plan = data["plan"]
-                password = data["password"]
-            except KeyError as ex:
-                error = f'Missing request data: "{ex}"'
-                logger.error(error)
-                return {
-                    'statusCode': 400,
-                    'body': json.dumps({"message": error}),
-                    'headers': {
-                        'Access-Control-Allow-Headers': '*',
-                        'Access-Control-Allow-Origin': '*',
-                        'Access-Control-Allow-Methods': '*'
-                        },
-                    }
-      
-            try:
-                subscribedon = data["subscribedon"]
-            except:
-                subscribedon = str(datetime.today().strftime('%m/%d/%Y'))
-                
             uid = ''.join(choice(ascii_lowercase) for i in range(8))
-            
             # Validate Email, Username and password
             check_feasibility_query = f'select id from users where email="{email}" or firstName="{firstname}" and lastName="{lastname}"'
             logger.debug(check_feasibility_query)
