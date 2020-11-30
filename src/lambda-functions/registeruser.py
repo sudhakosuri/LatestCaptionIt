@@ -4,6 +4,7 @@ import logging
 from random import choice
 from string import ascii_lowercase
 from connect_db import connect
+from datetime import datetime
 
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
@@ -53,7 +54,7 @@ def lambda_handler(event, context):
             try:
                 subscribedon = data["subscribedon"]
             except:
-                subscribedon = datetime.today().strftime('%m/%d/%Y')
+                subscribedon = str(datetime.today().strftime('%m/%d/%Y'))
                 
             uid = ''.join(choice(ascii_lowercase) for i in range(8))
             
@@ -94,7 +95,7 @@ def lambda_handler(event, context):
                 
             subscribedon = subscribedon.replace('/', '-')
             query = f'insert into users (id, firstName, lastName, email, password, planId, planusage, subscribedOn) ' + \
-            f'values ("{uid}", "{firstname}", "{lastname}", "{email}", "{password}", {plan_id}, 0, STR_TO_DATE("{subscribedon}", "%m-%d-%y"))'
+            f'values ("{uid}", "{firstname}", "{lastname}", "{email}", "{password}", {plan_id[0]}, 0, STR_TO_DATE("{subscribedon}", "%m-%d-%y"))'
             logger.debug(query)
             cursr.execute(query)
             conn.commit()
