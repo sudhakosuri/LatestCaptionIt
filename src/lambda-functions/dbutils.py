@@ -35,6 +35,7 @@ def validate_user(email, password):
                 logger.debug(query)
                 cursr.execute(query)
                 quey_output = cursr.fetchone()
+                logger.debug(quey_output)
                 if quey_output:
                     return quey_output[0]
                 else:
@@ -55,7 +56,7 @@ def validate_user_by_token(auth_token):
         if conn:
             with conn.cursor() as cursr:
                 # TODO query to get id based on auth-token
-                query = f'select userid from sessions where id=auth_token'
+                query = f'select userid from sessions where id="{auth_token}"'
                 logger.debug(query)
                 cursr.execute(query)
                 quey_output = cursr.fetchone()
