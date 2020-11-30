@@ -3,25 +3,14 @@ import pymysql
 import logging
 from random import choice
 from string import ascii_lowercase
-from connect_db import connect
+from dbutils import connect
 
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
 
 def lambda_handler(event, context):
-
-    conn = connect()
-    if not conn:
-        logger.error("Connection to the database failed")
-        return {
-        'statusCode': 500,
-        'body': json.dumps({"message": "Connection to the database failed"}),
-        'headers': {
-            'Access-Control-Allow-Headers': '*',
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': '*'
-            },
-        }
+    
+    logger.debug(event)
 
     try:
         userid = event["pathParameters"]["id"]
@@ -38,6 +27,20 @@ def lambda_handler(event, context):
             },
         }
 
+    conn = connect()
+    if not conn:
+        logger.error("Connection to the database failed")
+        return {
+        'statusCode': 500,
+        'body': json.dumps({"message": "Connection to the database failed"}),
+        'headers': {
+            'Access-Control-Allow-Headers': '*',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': '*'
+            },
+        }
+
+    logger.info('Database connection succesful!')
     try:
         with conn.cursor() as cursr:
             query = f'select * from users where id="{userid}"'
