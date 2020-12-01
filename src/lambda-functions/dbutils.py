@@ -96,10 +96,3 @@ def decrypt(cipher_string):
         err = f'Error decrypting cipher {cipher_string}:  {ex}'
         logger.error(err)
         raise Exception(err)
-
-
-if __name__ == '__main__':
-    #print(connect())
-    #print(validate_user('kaustubh@gmail.com', 'Kaustubh123#'))
-    #print(validate_user('userthatcanneverexist@gmail.com', 'Kaustubh123'))
-    print(decrypt(encrypt("Qwerty@1234")))
