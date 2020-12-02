@@ -3,13 +3,6 @@ import { Redirect } from 'react-router-dom'
 
 
 
-
-
-
-
-
-
-
 export default class Login extends Component {
 
     
@@ -17,7 +10,47 @@ export default class Login extends Component {
     constructor(props) {
         super(props);
         
-        this.state = {isLoggedIn: false, userName: '', password: '', erroruserName: '', errorPassword: '', userid:''};
+        this.state = {isLoggedIn: false, userName: '', password: '', erroruserName: '', errorPassword: '', userid:'', firstname:'', lastname:'', email:'', plan:'', subscribedon:'', usage:0};
+      }
+
+      userdetails(uid) {
+
+        const requestOptions2 = {
+            method: 'GET',
+            headers: { 'Access-Control-Request-Method': 'GET'
+            , 'Access-Control-Request-Headers': '*', 'x-auth-token': 'auth'}
+            
+        };
+
+        let fetch_url = 'https://86wu00bura.execute-api.us-east-1.amazonaws.com/v1/users/'+uid
+
+        fetch(fetch_url, requestOptions2)
+        .then(response => {
+            
+
+            // check for error response
+            if (!response.ok) {
+                // get error message from body or default to response statusText
+                const error = "There was some problem in the request. Please try again."
+                return Promise.reject(error);
+            }
+            return response.json()
+        })
+        .then(data => {
+
+            
+            
+            this.setState({isLoggedIn: true, userName: this.state.userName, password: this.state.password, erroruserName: this.state.erroruserName, errorPassword: this.state.errorPassword, userid: data.id, firstname:data.firstname, lastname:data.lastname, email:data.email, plan:data.plan, subscribedon:data.subscribedon, usage:data.usage})
+            console.log("Dataaaaaaaaaaaa")
+            console.log(this.state)
+            
+
+        })
+        .catch(error => {
+            console.error('There was an error!', error);
+            alert(error)
+        });
+
       }
 
       onSubmit(e) {
@@ -27,8 +60,11 @@ export default class Login extends Component {
         var uname = this.state.userName
         var pwd = this.state.password
 
+        
+
         console.log(uname)
         console.log(pwd)
+        let this_real=this
         const requestOptions = {
             method: 'POST',
             headers: { 'Access-Control-Request-Method': 'POST'
@@ -60,14 +96,20 @@ export default class Login extends Component {
                 return Promise.reject(error);
             }
             const uid = (JSON.parse(data.body)).id
-            this.setState({isLoggedIn: true, userName: this.state.userName, password: this.state.password, erroruserName: this.state.erroruserName, errorPassword: this.state.errorPassword, userid: uid})
             
-
+            this_real.userdetails(uid)
+            
         })
         .catch(error => {
             console.error('There was an error!', error);
             alert(error)
         });
+
+        
+
+        
+
+        
         
         
     }
@@ -79,7 +121,7 @@ export default class Login extends Component {
             this.setState({isLoggedIn: this.state.isLoggedIn, userName: e.target.value, password: this.state.password, erroruserName: 'Required', errorPassword: this.state.errorPassword, userid:this.state.userid})
             }
             else {
-                this.setState({isLoggedIn: this.state.isLoggedIn, userName: e.target.value, password: this.state.password, erroruserName: '', errorPassword: this.state.errorPassword, userid:this.state.userid})
+                this.setState({isLoggedIn: this.state.isLoggedIn, userName: e.target.value, password: this.state.password, erroruserName: '', errorPassword: this.state.errorPassword, userid:this.state.userid, firstname:this.state.firstname, lastname:this.state.lastname, email:this.state.email, plan:this.state.plan, subscribedon:this.state.subscribedon, usage:this.state.usage})
             }
             
     }
@@ -87,10 +129,10 @@ export default class Login extends Component {
     handlePasswordChange(e) {
 
         if(e.target.value =='') {
-            this.setState({isLoggedIn: this.state.isLoggedIn, userName: this.state.userName, password: this.state.password, erroruserName: this.state.erroruserName, errorPassword: 'Required', userid:this.state.userid})
+            this.setState({isLoggedIn: this.state.isLoggedIn, userName: this.state.userName, password: this.state.password, erroruserName: this.state.erroruserName, errorPassword: 'Required', userid:this.state.userid, firstname:this.state.firstname, lastname:this.state.lastname, email:this.state.email, plan:this.state.plan, subscribedon:this.state.subscribedon, usage:this.state.usage})
         }
         else {
-            this.setState({isLoggedIn: this.state.isLoggedIn, userName: this.state.userName, password: e.target.value, erroruserName: this.state.erroruserName, errorPassword: '', userid:this.state.userid})
+            this.setState({isLoggedIn: this.state.isLoggedIn, userName: this.state.userName, password: e.target.value, erroruserName: this.state.erroruserName, errorPassword: '', userid:this.state.userid, firstname:this.state.firstname, lastname:this.state.lastname, email:this.state.email, plan:this.state.plan, subscribedon:this.state.subscribedon, usage:this.state.usage})
         }
        
 
@@ -102,11 +144,11 @@ export default class Login extends Component {
     render() {
         if (this.state.isLoggedIn === true) {
 
-
+            console.log(this.state)
             
                 return (
 
-                    <Redirect to={{pathname: "/home", state: { uname: this.state.userName, pwd: this.state.password, userid:this.state.userid} }} />
+                    <Redirect to={{pathname: "/home", state: { uname: this.state.userName, pwd: this.state.password, userid:this.state.userid, firstname:this.state.firstname, lastname:this.state.lastname, email:this.state.email, plan:this.state.plan, subscribedon:this.state.subscribedon, usage:this.state.usage} }} />
                     
 
                 )

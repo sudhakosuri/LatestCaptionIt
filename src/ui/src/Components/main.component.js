@@ -15,19 +15,22 @@ export default class Main extends Component {
         this.handleUsage = this.handleUsage.bind(this);
         this.state = {isUpload: 1};
       }
+
+
     
       handleUpload() {
         this.setState({isUpload: 1});
-        //alert(this.state.isUpload)
+        
       }
     
       handleUsage() {
         this.setState({isUpload: 0});
-        //alert(this.state.isUpload)
+        
       }
 
     render(){
 
+        console.log(this.props)
         
         return(
 
@@ -48,13 +51,16 @@ export default class Main extends Component {
                                     
                                     </Nav>
                                     <Nav>
+        <Nav class="navbar-brand pull-right">Hi {this.props.location.state.firstname} {this.props.location.state.lastname} ! </Nav></Nav>
+                                    <Nav>
                                     <Nav.Link class="navbar-brand pull-right" href="/logout">Logout</Nav.Link></Nav>
                                 </Navbar.Collapse>
                             </Navbar>
                         
+                    
+                <Child data = {this.state.isUpload} userid={this.props.location.state.userid} firstname = {this.props.location.state.firstname} lastname={this.props.location.state.lastname} email={this.props.location.state.email} plan={this.props.location.state.plan} subscribedon={this.props.location.state.subscribedon} usage={this.props.location.state.usage}></Child>
+                </div>
                     </div>
-                    </div>
-                <Child data = {this.state.isUpload} userid= {this.props}></Child>
                 
             </div>
         )  

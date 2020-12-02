@@ -13,17 +13,23 @@ export default class Child extends Component {
 
     
     render(){
+
+        console.log("Child")
+        console.log(this.props)
         
         if (this.props.data === 1) {
             return(
                 <div>
                     <div className="row">
-                        <div className="col-md-4">
-                        <p style={{alignment: "center"}}>{this.props.datafromParent}</p>
-                            <Upload userid = {this.props}/>
+                        <div className="col-md-1"></div>
+                        <div className="col-md-11">
+                            
+                                <p style={{alignment: "center"}}>{this.props.datafromParent}</p>
+                                <Upload data = {this.props}/>
+                            
+                        
                         </div>
-                        <div className="col-md-8">
-                        </div>
+                        
                     </div>
                 </div>
             )  
@@ -35,7 +41,7 @@ export default class Child extends Component {
                     <div className="col-md-1"></div>
                     <div className="col-md-10">
                     <p>{this.props.datafromParent}</p>
-                        <Usage userid = {this.props}/>
+                        <Usage data={this.props}/>
                     </div>
                 </div>
             </div>

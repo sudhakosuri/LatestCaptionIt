@@ -1,6 +1,11 @@
 import React, { Component } from "react";
+import { useHistory } from 'react-router-dom';
+import {Redirect} from 'react-router-dom';
+import Login from "./login.component";
 
 export default class SignUp extends Component {
+
+    
 
     constructor(props){
         super(props);
@@ -8,12 +13,16 @@ export default class SignUp extends Component {
       }
 
 
+
+    navigateToLogin() {
+        let history = useHistory();
+        history.push("/")
+      }
    
     onSubmit(e) {
         e.preventDefault();
         console.log(e)
         if(this.state.errorEmail=='' && this.state.errorfirstName=='' && this.state.errorlastName=='' && this.state.errorPassword=='') {
-            alert("All good")
             var today = new Date();
             var dd = today.getDate();
 
@@ -49,13 +58,19 @@ export default class SignUp extends Component {
                 .then(response => {response.json()
                 console.log(response)})
                 .then(data => {alert("Successfully registered !!") 
+                //this.navigateToLogin()
                 console.log("helo")
-            console.log(data)});
+
+               
+            });
             }
             catch (error) {
                 console.error(error);
                 alert("Something went wrong! Please try again")
             }
+            
+            
+            
         }
         
         else {
@@ -115,7 +130,7 @@ export default class SignUp extends Component {
         else if (e.target.value.length>15)
             this.setState({errorPassword:'Too long', errorEmail:this.state.errorEmail, errorfirstName:this.state.errorfirstName, errorlastName:this.state.errorlastName});
         else if(e.target.value.length>0 && !pwd.test(e.target.value))
-            this.setState({errorPassword:'Min 8 characters, atleast one uppsercase, atleats one lower case, one number and one special character', errorEmail:this.state.errorEmail, errorfirstName:this.state.errorfirstName, errorlastName:this.state.errorlastName});
+            this.setState({errorPassword:'Min 8 characters, atleast one uppercase, atleast one lower case, one number and one special character', errorEmail:this.state.errorEmail, errorfirstName:this.state.errorfirstName, errorlastName:this.state.errorlastName});
         else 
             this.setState({errorEmail:this.state.errorEmail, errorfirstName:this.state.errorfirstName, errorlastName:this.state.errorlastName, errorPassword:''});
      }

@@ -47,8 +47,9 @@ export default class Upload extends Component {
         }
         else {
 
+            console.log(this.props)
 
-            const uid = this.props.userid.userid.location.state.userid
+            const uid = this.props.data.userid
 
             const this_real = this
 
@@ -90,7 +91,7 @@ export default class Upload extends Component {
                     })
                     .then(function (data) {
             
-                        console.log(data)
+                        
                         if (data.statusCode != 200) {
                             // get error message from body or default to response statusText
                             const error = (JSON.parse(data.body)).message
@@ -99,7 +100,7 @@ export default class Upload extends Component {
 
                         dt = dataURL.replace(/^data:image\/(png|jpg|jpeg);base64,/, "")
 
-                        console.log(dt)
+                        
                         this_real.setState({file: this_real.state.file, url:this_real.state.url, error:false, showResults:true, data: (JSON.parse(data.body)).message})
                 
                         
@@ -132,25 +133,27 @@ export default class Upload extends Component {
                     fetch('https://86wu00bura.execute-api.us-east-1.amazonaws.com/v1/caption', requestOptions)
                     .then(response => {
                         
-            
-                        // check for error response
+                        
                         if (!response.ok) {
                             // get error message from body or default to response statusText
                             const error = "There was some problem in the request. Please try again."
                             return Promise.reject(error);
                         }
-                        return response.json()
+
+
+                        return Promise.resolve(response.json())
                     })
                     .then(data => {
             
-                        console.log(data)
                         if (data.statusCode != 200) {
                             // get error message from body or default to response statusText
                             const error = (JSON.parse(data.body)).message
                             return Promise.reject(error);
                         }
+
+                    
+                        this_real.setState({file: this_real.state.file, url:this_real.state.url, error:false, showResults:true, data: (JSON.parse(data.body)).message})
         
-                        this_real.setState({file: '', url:'', error:false, showResults:true, data: (JSON.parse(data.body)).message})
                         
             
                     })
@@ -163,8 +166,6 @@ export default class Upload extends Component {
         
                 });
             }
-
-
                
         }
     }
@@ -178,8 +179,8 @@ export default class Upload extends Component {
         return(
             <div>
                 <div className="row">
-                    <div className="col-md-2"></div>
-                    <div className="col-md-8">
+                    
+                    <div className="col-md-3">
                     <form id="create-course-form">
                         <br/>
                         <div class="form-group">
@@ -205,11 +206,14 @@ export default class Upload extends Component {
                         
                     </form>
                     </div>
-                    {this.state.showResults && <div className="col-md-2"><Result file={this.state.file} data={this.state.data}></Result></div>}
+
+                    <div className="col-md-9">
                     
+                    {this.state.showResults && <Result file={this.state.file} data={this.state.data} url={this.state.url}></Result>}</div>
                     
+                    </div>
                 </div>
-            </div>
+
         )  
     }
 }
