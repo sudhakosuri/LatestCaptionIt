@@ -13,15 +13,6 @@ export default class Result extends Component {
 
     render(){
        
-        console.log(this.props.data)
-        console.log(this.props.file)
-        console.log(this.props.url)
-        console.log(this.props.file != null)
-        console.log(this.props.file!='')
-        console.log(typeof this.props.file != undefined)
-        console.log(this.props.url!= null)
-        console.log(this.props.url!='')
-        console.log(typeof this.props.url != undefined)
 
         if (this.props.file != null || this.props.url!= null || this.props.file!='' || this.props.url!='' || (typeof this.props.file != undefined) || (typeof this.props.url != undefined)) {
 
@@ -37,9 +28,6 @@ export default class Result extends Component {
                 
             }
 
-            console.log(src1)
-
-       
 
         return(
             

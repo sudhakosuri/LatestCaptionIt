@@ -19,7 +19,7 @@ export default class Usage extends Component {
                 <div className="row">
                     
                     <div className="col-md-12">
-                    
+                        &nbsp;
                         <div className="row">
                         <span>Subscription email: </span>&nbsp;&nbsp;&nbsp;{this.props.data.email}
                         </div>

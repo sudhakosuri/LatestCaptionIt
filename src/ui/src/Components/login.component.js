@@ -13,6 +13,9 @@ export default class Login extends Component {
         this.state = {isLoggedIn: false, userName: '', password: '', erroruserName: '', errorPassword: '', userid:'', firstname:'', lastname:'', email:'', plan:'', subscribedon:'', usage:0};
       }
 
+
+     
+
       userdetails(uid) {
 
         const requestOptions2 = {
@@ -37,13 +40,8 @@ export default class Login extends Component {
             return response.json()
         })
         .then(data => {
-
             
-            
-            this.setState({isLoggedIn: true, userName: this.state.userName, password: this.state.password, erroruserName: this.state.erroruserName, errorPassword: this.state.errorPassword, userid: data.id, firstname:data.firstname, lastname:data.lastname, email:data.email, plan:data.plan, subscribedon:data.subscribedon, usage:data.usage})
-            console.log("Dataaaaaaaaaaaa")
-            console.log(this.state)
-            
+            this.setState({isLoggedIn: true, userName: this.state.userName, password: this.state.password, erroruserName: this.state.erroruserName, errorPassword: this.state.errorPassword, userid: data.id, firstname:data.firstname, lastname:data.lastname, email:data.email, plan:data.plan, subscribedon:data.subscribedon, usage:data.usage})            
 
         })
         .catch(error => {
@@ -56,14 +54,11 @@ export default class Login extends Component {
       onSubmit(e) {
 
         e.preventDefault();
-        console.log(e)
+        
         var uname = this.state.userName
         var pwd = this.state.password
 
-        
 
-        console.log(uname)
-        console.log(pwd)
         let this_real=this
         const requestOptions = {
             method: 'POST',
@@ -98,6 +93,9 @@ export default class Login extends Component {
             const uid = (JSON.parse(data.body)).id
             
             this_real.userdetails(uid)
+
+            
+            
             
         })
         .catch(error => {
@@ -144,7 +142,6 @@ export default class Login extends Component {
     render() {
         if (this.state.isLoggedIn === true) {
 
-            console.log(this.state)
             
                 return (
 

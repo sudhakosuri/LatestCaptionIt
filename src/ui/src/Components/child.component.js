@@ -14,9 +14,6 @@ export default class Child extends Component {
     
     render(){
 
-        console.log("Child")
-        console.log(this.props)
-        
         if (this.props.data === 1) {
             return(
                 <div>

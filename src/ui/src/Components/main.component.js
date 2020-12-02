@@ -30,7 +30,6 @@ export default class Main extends Component {
 
     render(){
 
-        console.log(this.props)
         
         return(
 
@@ -40,7 +39,7 @@ export default class Main extends Component {
                 <div className="row">
                     <div className="col-md-12">
                             <Navbar bg="dark" variant="dark" expand="lg" sticky="top">
-                                <Navbar.Brand href="#home">Caption It !</Navbar.Brand>
+                                <Navbar.Brand href="/home">Caption It !</Navbar.Brand>
                                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                                 <Navbar.Collapse id="basic-navbar-nav">
                                     <Nav className="mr-auto">

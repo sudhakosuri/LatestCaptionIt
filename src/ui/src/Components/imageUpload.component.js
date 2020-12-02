@@ -22,7 +22,7 @@ export default class Upload extends Component {
 
     fileChangedHandler(event){
 
-        console.log(event.target.files)
+        
         this.setState({file: event.target.files[0], url:this.state.url, error:this.state.error, showResults:this.state.showResults, data: this.state.data})
       
     }
@@ -44,8 +44,7 @@ export default class Upload extends Component {
       
     uploadHandler(){
 
-        console.log(this.state.url)
-        console.log(this.state.file)
+       
         let dt = ''
 
         if ((this.state.url == null || this.state.url == '') && (this.state.file == null || this.state.file == '')) {

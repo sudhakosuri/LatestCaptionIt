@@ -1,7 +1,5 @@
 import React, { Component } from "react";
-import { useHistory } from 'react-router-dom';
-import {Redirect} from 'react-router-dom';
-import Login from "./login.component";
+
 
 export default class SignUp extends Component {
 
@@ -13,15 +11,11 @@ export default class SignUp extends Component {
       }
 
 
-
-    navigateToLogin() {
-        let history = useHistory();
-        history.push("/")
-      }
    
     onSubmit(e) {
         e.preventDefault();
         console.log(e)
+        let this_real = this
         if(this.state.errorEmail=='' && this.state.errorfirstName=='' && this.state.errorlastName=='' && this.state.errorPassword=='') {
             var today = new Date();
             var dd = today.getDate();
@@ -58,8 +52,10 @@ export default class SignUp extends Component {
                 .then(response => {response.json()
                 console.log(response)})
                 .then(data => {alert("Successfully registered !!") 
-                //this.navigateToLogin()
-                console.log("helo")
+                console.log(data)
+                this_real.props.history.push('/');
+                
+                
 
                
             });
