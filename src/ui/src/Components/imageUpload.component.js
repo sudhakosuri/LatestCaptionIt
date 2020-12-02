@@ -37,6 +37,10 @@ export default class Upload extends Component {
             console.log('Error: ', error);
         };
     }
+
+    reset() {
+        window.location.reload();
+    }
       
     uploadHandler(){
 
@@ -203,6 +207,7 @@ export default class Upload extends Component {
                         
                         <button type="button" class="btn btn-primary" onClick={this.uploadHandler.bind(this)}>Get caption</button>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <button type="button" class="btn btn-primary" onClick={this.reset.bind(this)}>Reset</button>
                         
                     </form>
                     </div>
