@@ -44,14 +44,22 @@ export default class Upload extends Component {
       
     uploadHandler(){
 
+        console.log(this.state.url)
+        console.log(this.state.file)
         let dt = ''
 
         if ((this.state.url == null || this.state.url == '') && (this.state.file == null || this.state.file == '')) {
+            
+            this.setState({file: this.state.file, url:this.state.url, error:true, showResults:this.state.showResults, data: this.state.data})
+        }
+        else if((this.state.url != '') && (this.state.file != '')) {
+            
             this.setState({file: this.state.file, url:this.state.url, error:true, showResults:this.state.showResults, data: this.state.data})
         }
         else {
+            
 
-            console.log(this.props)
+            
 
             const uid = this.props.data.userid
 
@@ -200,7 +208,7 @@ export default class Upload extends Component {
 
                        <input type="file" id="files" accept="image/*" class="form-control"  placeholder="Image" onChange={this.fileChangedHandler.bind(this)}/>
                     
-            {this.state.error && <div  style={{float:'left'}}><p style={{color: 'red'}}>Should provide URL or upload an image</p></div>}
+            {this.state.error && <div  style={{float:'left'}}><p style={{color: 'red'}}>Should provide either URL or upload an image</p></div>}
                         </div>
                         <br/>
                         <br/>
@@ -211,8 +219,8 @@ export default class Upload extends Component {
                         
                     </form>
                     </div>
-
-                    <div className="col-md-9">
+                    <div className="col-md-1"></div>
+                    <div className="col-md-7">
                     
                     {this.state.showResults && <Result file={this.state.file} data={this.state.data} url={this.state.url}></Result>}</div>
                     

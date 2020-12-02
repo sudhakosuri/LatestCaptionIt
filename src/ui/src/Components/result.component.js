@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { IconName } from 'react-feather';
 
 
     
@@ -48,11 +49,9 @@ export default class Result extends Component {
                 <div>
                 <img id="result_img" src={src1} width='220px' height='220px'/>
                 </div>        
-                
+                &nbsp;
                 <div class="row">{this.props.data}</div>
-                <a class="btn btn-block btn-social btn-twitter">
-    <span class="fa fa-twitter"></span> Sign in with Twitter
-  </a>
+                
                     
             </div>
         )}  else if ((this.props.file != null || this.props.file!='' || (typeof this.props.file != undefined)) && (this.props.url!= null ||  this.props.url!='' || (typeof this.props.url != undefined))){return null}

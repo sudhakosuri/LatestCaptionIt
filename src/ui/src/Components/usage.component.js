@@ -19,8 +19,17 @@ export default class Usage extends Component {
                 <div className="row">
                     
                     <div className="col-md-12">
+                    
+                        <div className="row">
+                        <span>Subscription email: </span>&nbsp;&nbsp;&nbsp;{this.props.data.email}
+                        </div>
+                        &nbsp;
                         <div className="row">
                         <span>Subscription type: </span>&nbsp;&nbsp;&nbsp;{this.props.data.plan}
+                        </div>
+                        &nbsp;
+                        <div className="row">
+                        <span>Subscribed on: </span>&nbsp;&nbsp;&nbsp;{this.props.data.subscribedon}
                         </div>
                         &nbsp;
                         <div className="row">
