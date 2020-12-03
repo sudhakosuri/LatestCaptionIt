@@ -28,6 +28,14 @@ export default class Result extends Component {
                 
             }
 
+            let dup = this.props.data
+
+            let str_list = dup.split(' ')
+
+            let uni_list = []
+
+            
+           
 
         return(
             
@@ -38,7 +46,7 @@ export default class Result extends Component {
                 <img id="result_img" src={src1} width='220px' height='220px'/>
                 </div>        
                 &nbsp;
-                <div class="row">{this.props.data}</div>
+                <div class="row"><h4>Caption:</h4> {dup}</div>
                 
                     
             </div>
